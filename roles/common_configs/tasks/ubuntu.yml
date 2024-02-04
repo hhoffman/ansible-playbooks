@@ -1,0 +1,5 @@
+ - name: Comment out motd news
+    ansible.builtin.replace:
+      path: /etc/default/motd-news
+      regexp: '^ENABLED=1'
+      replace: 'ENABLED=0'

@@ -1,0 +1,21 @@
+---
+# roles/comon_configs/tasks/main.yml
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+
+
+# Run specific tasks for distro
+- name: Run Debian based system tasks
+  import_tasks: ubuntu.yml
+  when: "ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'"
+
+# Run specific tasks for distro
+- name: Run Redhat based systems tasks
+  import_tasks: ubuntu.yml
+  when: "ansible_os_family == 'Redhat'
