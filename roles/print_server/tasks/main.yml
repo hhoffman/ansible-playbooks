@@ -1,0 +1,46 @@
+---
+# Setup CUPS/Airplay
+- name: Setup CUPS/Airplay
+  ansible.builtin.package:
+    name:
+    - cups
+    - avahi-discover
+    - avahi-daemon
+    - foomatic-db
+    - printer-driver-gutenprint
+
+- name: Ensure cups is running
+  ansible.builtin.systemd_service:
+    state: started
+    name: cups
+
+- name: Enable cups service
+  ansible.builtin.systemd_service:
+    name: cups
+    enabled: true
+
+- name: Ensure aavahi is running
+  ansible.builtin.systemd_service:
+    state: started
+    name: avahi-daemon
+
+- name: Enable cups service
+  ansible.builtin.systemd_service:
+    name: avahi-daemon
+    enabled: true
+
+- name: Turn on browsing for CUPS
+  ansible.builtin.replace:
+    path: /etc/cups/cupsd.conf
+    regexp: '^Browsing No'
+    replace: 'Browsing Yes'
+  notify: restart avahi-daemon
+
+- name: Build the printer file from template
+  ansible.builtin.template:
+    src: templates/printer_config.xml.j2
+    dest: "/etc/avahi/services/AirPrint-{{ printer_model|replace(' ', '-') }}.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart avahi-daemon

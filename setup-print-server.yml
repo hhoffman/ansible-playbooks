@@ -1,0 +1,9 @@
+---
+# apply-common-configs.yml
+
+- name: Setup Print Server
+  hosts: print_servers
+  become: yes
+  become_user: root
+  roles:
+    - print_server
