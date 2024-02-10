@@ -43,4 +43,5 @@
     owner: root
     group: root
     mode: '0644'
+  loop: "{{ printers }}"
   notify: restart avahi-daemon
