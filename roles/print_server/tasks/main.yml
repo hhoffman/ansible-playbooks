@@ -1,6 +1,6 @@
 ---
-# Setup CUPS/Airplay
-- name: Setup CUPS/Airplay
+# Setup CUPS/Airplay packages
+- name: Setup CUPS/Airplay packages
   ansible.builtin.package:
     name:
     - cups
@@ -14,17 +14,17 @@
     state: started
     name: cups
 
-- name: Enable cups service
+- name: Enable cups service at boot
   ansible.builtin.systemd_service:
     name: cups
     enabled: true
 
-- name: Ensure aavahi is running
+- name: Ensure avahi is running
   ansible.builtin.systemd_service:
     state: started
     name: avahi-daemon
 
-- name: Enable cups service
+- name: Enable avahi service at boot
   ansible.builtin.systemd_service:
     name: avahi-daemon
     enabled: true
@@ -39,7 +39,7 @@
 - name: Build the printer file from template
   ansible.builtin.template:
     src: templates/printer_config.xml.j2
-    dest: "/etc/avahi/services/AirPrint-{{ printer_model|replace(' ', '-') }}.service"
+    dest: "/etc/avahi/services/AirPrint-{{ item.model|replace(' ', '-') }}.service"
     owner: root
     group: root
     mode: '0644'
